@@ -1,6 +1,7 @@
 
 import { useState } from "react"
 import { createMetal } from "../api/metalApi"
+import {PlusCircle, X } from "lucide-react"
 
 const AddMetalModal = ({ onClose, onAddMetal }) => {
   const [formData, setFormData] = useState({
@@ -99,7 +100,7 @@ const AddMetalModal = ({ onClose, onAddMetal }) => {
   // Harshit chauhan 
 
   return (
-    <div className="fixed inset-0 bg-opacity-30 flex items-center justify-center z-50">
+    <div className="fixed inset-0  bg-transparent backdrop-blur-sm bg-opacity-30 flex items-center justify-center z-50">
       <div className="bg-gray-100 rounded-lg shadow-xl w-full max-w-2xl">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-medium">Add New Metal</h2>

@@ -38,7 +38,7 @@ const Sidebar = () => {
     }, 1000);
   }
   return (
-    <div className="bg-[#8AAE4A] text-white w-64 flex-shrink-0 flex flex-col">
+    <div className="bg-[#8AAE4A] text-white w-70 flex-shrink-0 flex flex-col">
       <div className="p-6">
         <h1 className="text-2xl font-bold">LOGO</h1>
       </div>
