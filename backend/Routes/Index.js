@@ -4,15 +4,15 @@ const router = express.Router();
 // Import all routers
 const MetalsController = require("../Controllers/MetalsController");
 const DashboardController = require("../Controllers/DashboardController");
-const CustomerController = require("../Controllers/customerController");
+const CustomerController = require("../Controllers/CustomerController");
 const UserController = require("../Controllers/UserController");
 const AuthRouter = require("./AuthRouter"); // ✅ IMPORT AUTH ROUTER
-const StonesController=require('./../Controllers/StoneController')
-const ImageController=require("../Controllers/ImageController")
+const StonesController = require("./../Controllers/StoneController");
+const ImageController = require("../Controllers/ImageController");
 // ✅ Use the AuthRouter at '/auth'
 router.use("/auth", AuthRouter); // ✅ This line mounts /auth/login & /auth/signup
 //Creat image orute
-router.get("uplaodImage",ImageController.uplaodImage)
+router.post("/uploadImage", ImageController.uploadImage);
 // Metals routes
 router.get("/metals", MetalsController.getAllMetals);
 router.get("/metals/:id", MetalsController.getMetalById);

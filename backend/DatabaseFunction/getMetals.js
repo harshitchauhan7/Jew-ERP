@@ -1,4 +1,4 @@
-const {connect}=require('../Connections/connection')
+const { connect } = require("../Connections/DatabaseConnection/connection");
 async function getMetals() {
   let db;
   try {
@@ -10,6 +10,6 @@ async function getMetals() {
   } catch (error) {
     console.error("❌ Failed to fetch metals:", error.message);
     return [];
-  } 
+  }
 }
-module.exports={getMetals}
+module.exports = { getMetals };
