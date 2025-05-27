@@ -1,24 +1,15 @@
 const { connect } = require("../Connections/DatabaseConnection/connection");
 
-async function addStones(name, price, image, description) {
-  // Basic validation
-  if (
-    !name ||
-    typeof name !== "string" ||
-    typeof price !== "number" ||
-    !image ||
-    typeof image !== "string" ||
-    !description ||
-    typeof description !== "string"
-  ) {
-    throw new Error("Invalid input types");
-  }
-
+async function addStones(name, size, color, unit, price, piece, weight, image) {
   const newStone = {
     name,
+    size,
+    color,
+    unit,
     price,
-    image: image || "/placeholder.svg?height=150&width=150",
-    description,
+    piece,
+    weight,
+    image,
   };
 
   try {

@@ -37,14 +37,21 @@ exports.getStoneById = async (req, res) => {
 exports.postStone = async (req, res) => {
   try {
     console.log("Incoming data is", req.body);
-    const { name, price, image, description } = req.body;
+    const { name, size, color, unit, price, piece, weight, image } = req.body;
 
     // Basic validation
-    if (!name || !price || !image) {
-      return res.status(400).json({ message: "Missing required fields" });
-    }
 
-    const result = await addStones(name, price, image, description || "");
+    const result = await addStones(
+      name,
+      size,
+      color,
+      unit,
+      price,
+      piece,
+      weight,
+      image ||
+        "https://avatars.githubusercontent.com/u/129311377?v=4https://avatars.githubusercontent.com/u/129311377?v=4"
+    );
 
     if (result && result.insertedId) {
       //After insting we all calling the getAllStones to sen the updated data
