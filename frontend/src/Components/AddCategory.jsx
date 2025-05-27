@@ -52,7 +52,7 @@ const AddCategoryModal = ({ onClose, setCategory }) => {
       image: formData.image,
       type: formData.type,
       active: formData.active,
-      image: formData.image,
+
       name: formData.name,
     };
 

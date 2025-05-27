@@ -1,25 +1,32 @@
+import { useState } from "react";
+import EditCategoryModal from "./EditCategory";
 
-import { useState } from "react"
-import EditCategoryModal from "./EditCategory"
-
-const CategoryGrid = ({ categories, viewMode, onToggleActive, onEditCategory }) => {
-  const [editingCategory, setEditingCategory] = useState(null)
+const CategoryGrid = ({
+  categories,
+  viewMode,
+  onToggleActive,
+  onEditCategory,
+}) => {
+  const [editingCategory, setEditingCategory] = useState(null);
 
   const handleEditClick = (category) => {
-    setEditingCategory(category)
-  }
+    setEditingCategory(category);
+  };
 
   const handleEditSave = (updatedCategory) => {
-    onEditCategory(editingCategory.id, updatedCategory)
-    setEditingCategory(null)
-  }
+    onEditCategory(updatedCategory);
+    setEditingCategory(null);
+  };
 
   if (viewMode === "grid") {
     return (
       <>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {categories.map((category) => (
-            <div key={category.id} className="bg-gray-200 rounded-md overflow-hidden">
+            <div
+              key={category.id}
+              className="bg-gray-200 rounded-md overflow-hidden"
+            >
               <div className="h-32 bg-gray-300">
                 <img
                   src={category.image || "/placeholder.svg"}
@@ -40,16 +47,21 @@ const CategoryGrid = ({ categories, viewMode, onToggleActive, onEditCategory }) 
                     />
                     <label
                       htmlFor={`toggle-${category.id}`}
-                      className={`block overflow-hidden h-6 rounded-full cursor-pointer ${category.active ? "bg-[#8AAE4A]" : "bg-gray-300"}`}
+                      className={`block overflow-hidden h-6 rounded-full cursor-pointer ${
+                        category.active ? "bg-[#8AAE4A]" : "bg-gray-300"
+                      }`}
                     >
                       <span
-                        className={`dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 ease-in-out ${category.active ? "transform translate-x-4" : ""}`}
+                        className={`dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 ease-in-out ${
+                          category.active ? "transform translate-x-4" : ""
+                        }`}
                       ></span>
                     </label>
                   </div>
                 </div>
                 <div className="text-sm text-gray-600 mb-2">
-                  Jewellery type: <span className="font-medium">{category.type}</span>
+                  Jewellery type:{" "}
+                  <span className="font-medium">{category.type}</span>
                 </div>
                 <button
                   onClick={() => handleEditClick(category)}
@@ -70,7 +82,7 @@ const CategoryGrid = ({ categories, viewMode, onToggleActive, onEditCategory }) 
           />
         )}
       </>
-    )
+    );
   } else {
     return (
       <>
@@ -81,8 +93,12 @@ const CategoryGrid = ({ categories, viewMode, onToggleActive, onEditCategory }) 
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Image
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Type
+                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
@@ -104,7 +120,9 @@ const CategoryGrid = ({ categories, viewMode, onToggleActive, onEditCategory }) 
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{category.name}</div>
+                    <div className="text-sm font-medium text-gray-900">
+                      {category.name}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-500">{category.type}</div>
@@ -120,16 +138,23 @@ const CategoryGrid = ({ categories, viewMode, onToggleActive, onEditCategory }) 
                       />
                       <label
                         htmlFor={`toggle-list-${category.id}`}
-                        className={`block overflow-hidden h-6 rounded-full cursor-pointer ${category.active ? "bg-green-600" : "bg-gray-300"}`}
+                        className={`block overflow-hidden h-6 rounded-full cursor-pointer ${
+                          category.active ? "bg-green-600" : "bg-gray-300"
+                        }`}
                       >
                         <span
-                          className={`dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 ease-in-out ${category.active ? "transform translate-x-4" : ""}`}
+                          className={`dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 ease-in-out ${
+                            category.active ? "transform translate-x-4" : ""
+                          }`}
                         ></span>
                       </label>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button onClick={() => handleEditClick(category)} className="text-gray-600 hover:text-gray-900">
+                    <button
+                      onClick={() => handleEditClick(category)}
+                      className="text-gray-600 hover:text-gray-900"
+                    >
                       Edit details
                     </button>
                   </td>
@@ -147,8 +172,8 @@ const CategoryGrid = ({ categories, viewMode, onToggleActive, onEditCategory }) 
           />
         )}
       </>
-    )
+    );
   }
-}
+};
 
-export default CategoryGrid
+export default CategoryGrid;

@@ -35,14 +35,9 @@ exports.getAllCategory = async (req, res) => {
 exports.updateCategory = async (req, res) => {
   try {
     const categoryId = req.params.id;
-    const { url, nameOfCategory, jewelleeryType } = req.body;
+    const { image, type, active, name } = req.body;
 
-    const result = await updateCategory(
-      categoryId,
-      url,
-      nameOfCategory,
-      jewelleeryType
-    );
+    const result = await updateCategory(image, type, active, name, categoryId);
 
     if (result) {
       this.getAllCategory(req, res); // Return updated list

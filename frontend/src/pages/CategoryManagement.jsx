@@ -28,12 +28,8 @@ function CategoryManagement() {
     );
   };
 
-  const handleEditCategory = (id, updatedCategory) => {
-    setCategories(
-      categories.map((category) =>
-        category.id === id ? { ...category, ...updatedCategory } : category
-      )
-    );
+  const handleEditCategory = (allCategory) => {
+    setCategories(allCategory);
     toast.success("Category updated successfully!");
   };
 
