@@ -77,7 +77,6 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
 // DB Connection
 require("./Models/db"); // This should connect DB using mongoose.connect()
 
@@ -120,6 +119,22 @@ app.listen(PORT, async () => {
       throw error; // Rethrow the error to handle it further up if needed
     }
   };
+  async function deleteAllCategories() {
+    try {
+      const db = await connect();
+      const categoryCollection = db.collection("category");
 
+      const result = await categoryCollection.deleteMany({});
+
+      console.log(
+        `✅ All categories deleted successfully, count: ${result.deletedCount}`
+      );
+      return result;
+    } catch (error) {
+      console.error("❌ Error deleting categories:", error.message);
+      throw error;
+    }
+  }
+  // deleteAllCategories();
   // deleteAllMetals();
 });

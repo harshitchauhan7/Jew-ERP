@@ -1,19 +1,20 @@
 const { connect } = require("../../Connections/DatabaseConnection/connection");
 
-async function postCategory(url, nameOfCategory, jewelleeryType) {
+async function postCategory(image, type, active, name) {
   try {
     const db = await connect();
     const categoryCollection = db.collection("category");
 
     const newCategory = {
-      image: url,
-      categoryName: nameOfCategory,
-      jewelleryType: jewelleeryType,
+      image: image || "https://avatars.githubusercontent.com/u/129311377?v=4",
+      type,
+      active,
+      name,
       createdAt: new Date(),
     };
 
     const result = await categoryCollection.insertOne(newCategory);
-    console.log("✅ Category uploaded successfully, ID:", result.insertedId);
+
     return true;
   } catch (error) {
     console.error("❌ Error uploading category:", error.message);

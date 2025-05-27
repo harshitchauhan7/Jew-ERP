@@ -7,8 +7,9 @@ const {
 // Add New Category
 exports.addCategory = async (req, res) => {
   try {
-    const { url, nameOfCategory, jewelleeryType } = req.body;
-    const result = await postCategory(url, nameOfCategory, jewelleeryType);
+    const { image, type, active, name } = req.body;
+
+    const result = await postCategory(image, type, active, name);
     if (result) {
       this.getAllCategory(req, res);
     }
