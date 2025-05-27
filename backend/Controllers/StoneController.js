@@ -2,12 +2,12 @@ const { connect } = require("../Connections/DatabaseConnection/connection");
 const Stone = require("../Models/Stone"); // Assuming you have a Stone model
 const { getStones } = require("../DatabaseFunction/getStones");
 const { addStones } = require("../DatabaseFunction/postStone");
-
+const { ObjectId } = require("mongodb");
 // Get all stones
 exports.getAllStones = async (req, res) => {
   try {
     const stones = await getStones();
-    console.log("all stones are", stones);
+
     res.json(stones);
   } catch (err) {
     console.error("Failed to fetch stones:", err);
@@ -16,11 +16,15 @@ exports.getAllStones = async (req, res) => {
 };
 
 // Get single stone by ID
+
 exports.getStoneById = async (req, res) => {
   try {
     const db = await connect();
     const stonesCollection = db.collection("stone");
-    const stone = await stonesCollection.findOne({ _id: req.params.id });
+
+    const stone = await stonesCollection.findOne({
+      _id: new ObjectId(req.params.id),
+    });
 
     if (!stone) {
       return res.status(404).json({ message: "Stone not found" });
@@ -67,20 +71,32 @@ exports.postStone = async (req, res) => {
 };
 
 // Update stone
+
 exports.updateStone = async (req, res) => {
   try {
-    const { stoneName, stonePrice, stoneImage, description } = req.body;
+    const { name, size, color, unit, price, piece, weight, image } = req.body;
     const db = await connect();
     const stonesCollection = db.collection("stone");
 
+    let objectId;
+    try {
+      objectId = new ObjectId(req.params.id);
+    } catch (err) {
+      return res.status(400).json({ message: "Invalid ID format" });
+    }
+
     const result = await stonesCollection.updateOne(
-      { _id: req.params.id },
+      { _id: objectId },
       {
         $set: {
-          ...(stoneName && { stoneName }),
-          ...(stonePrice && { stonePrice }),
-          ...(stoneImage && { stoneImage }),
-          ...(description && { description }),
+          ...(name && { name }),
+          ...(size && { size }),
+          ...(color && { color }),
+          ...(unit && { unit }),
+          ...(price && { price }),
+          ...(piece && { piece }),
+          ...(weight && { weight }),
+          ...(image && { image }),
         },
       }
     );
@@ -89,8 +105,8 @@ exports.updateStone = async (req, res) => {
       return res.status(404).json({ message: "Stone not found" });
     }
 
-    const updatedStone = await stonesCollection.findOne({ _id: req.params.id });
-    res.json(updatedStone);
+    const updatedStone = await stonesCollection.findOne({ _id: objectId });
+    this.getAllStones(req, res);
   } catch (err) {
     console.error(`Failed to update stone with ID ${req.params.id}:`, err);
     res.status(500).json({ message: "Server error" });
@@ -120,9 +136,6 @@ exports.deleteStone = async (req, res) => {
 exports.updateStonePrice = async (req, res) => {
   try {
     const { price } = req.body;
-    if (typeof price !== "number" || price < 0) {
-      return res.status(400).json({ message: "Invalid price" });
-    }
 
     const db = await connect();
     const stonesCollection = db.collection("stone");

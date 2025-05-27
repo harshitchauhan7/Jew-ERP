@@ -1,33 +1,20 @@
 import React, { useEffect, useState } from "react";
 
 const StoneDetailsModal = ({ stoneId, onClose, onEditClick }) => {
-  const [stone, setStone] = useState(null);
+  const [stone, setStone] = useState(stoneId);
 
   useEffect(() => {
-    // const fetchStoneDetails = async () => {
-    //   try {
-    //     const response = await fetch(`/api/stones/${stoneId}`);
-    //     const data = await response.json();
-    //     setStone(data);
-    //   } catch (error) {
-    //     console.error("Failed to fetch stone details:", error);
-    //   }
-    // };
-    const fetchStoneDetails = async () => {
-  try {
-    const response = await fetch(`/api/stones/${stoneId}`);
-    if (!response.ok) {
-      console.error(`Stone fetch failed: ${response.status}`);
-      return;
+    async function fetchStoneDetails() {
+      try {
+        const response = await fetch(`/api/stones/${stoneId}`);
+
+        const data = await response.json();
+        console.log(data);
+        setStone(data);
+      } catch (error) {
+        console.error("Failed to fetch stone details:", error);
+      }
     }
-    const data = await response.json();
-    setStone(data);
-  } catch (error) {
-    console.error("Failed to fetch stone details:", error);
-  }
-};
-
-
     if (stoneId) fetchStoneDetails();
   }, [stoneId]);
 
@@ -57,7 +44,9 @@ const StoneDetailsModal = ({ stoneId, onClose, onEditClick }) => {
             <p className="text-sm text-gray-500 mt-1">Price per unit</p>
             <p className="font-semibold">₹{stone.price}</p>
             <p className="text-sm text-gray-500 mt-1">Weight</p>
-            <p className="font-semibold">{stone.weight} {stone.unit?.toLowerCase() || ""}</p>
+            <p className="font-semibold">
+              {stone.weight} {stone.unit?.toLowerCase() || ""}
+            </p>
           </div>
         </div>
 
@@ -103,24 +92,23 @@ const StoneDetailsModal = ({ stoneId, onClose, onEditClick }) => {
       </div>
 
       {stone.variants && stone.variants.length > 0 && (
-  <div className="mt-4">
-    <p className="text-sm font-medium text-gray-700 mb-2">Variants</p>
-    <div className="space-y-2">
-      {stone.variants.map((variant, index) => (
-        <div
-          key={variant.id || index}
-          className="flex justify-between text-sm bg-gray-100 rounded-md px-3 py-1"
-        >
-          <span className="capitalize">{variant.name}</span>
-          <span>
-            {variant.purity}% – ₹{variant.price}
-          </span>
+        <div className="mt-4">
+          <p className="text-sm font-medium text-gray-700 mb-2">Variants</p>
+          <div className="space-y-2">
+            {stone.variants.map((variant, index) => (
+              <div
+                key={variant.id || index}
+                className="flex justify-between text-sm bg-gray-100 rounded-md px-3 py-1"
+              >
+                <span className="capitalize">{variant.name}</span>
+                <span>
+                  {variant.purity}% – ₹{variant.price}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
-  </div>
-)}
-
+      )}
     </div>
   );
 };

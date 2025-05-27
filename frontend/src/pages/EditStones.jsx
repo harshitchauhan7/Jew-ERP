@@ -1,46 +1,56 @@
 import React, { useState } from "react";
 import { FiUpload } from "react-icons/fi";
+import { updateStone } from "../api/stoneApi";
 
-const StoneEditModal = ({ stone, onClose, onSave }) => {
-  const [formData, setFormData] = useState({
-    name: stone.name || "",
-    unit: stone.unit || "RATTI",
-    size: stone.size || "",
-    color: stone.color || "",
-    piece: stone.piece || 1,
-    price: stone.price || 0,
-    weight: stone.weight || "",
-    image: stone.image || null,
-  });
+const StoneEditModal = ({ stone, onClose, onSave, setStoneState }) => {
+  const [formData, setFormData] = useState(stone);
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData({ ...formData, image: reader.result });
-      };
-      reader.readAsDataURL(file);
+      const formDataToUpload = new FormData();
+      formDataToUpload.append("image", file);
+
+      try {
+        const response = await fetch("http://localhost:5000/api/uploadImage", {
+          method: "POST",
+          body: formDataToUpload,
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          setFormData((org) => ({ ...org, image: data.url }));
+
+          setPreviewUrl(data.url); // this is the Cloudinary URL
+        } else {
+          console.error("Upload failed:", data.error);
+        }
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
     }
   };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const handleSave = async () => {
     try {
-      const res = await fetch(`/api/stones/${stone._id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      const result = await res.json();
-      if (res.ok) {
-        onSave(result);
-        onClose();
-      } else {
-        alert("Failed to update stone");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error while saving");
+      const newStone = {
+        name: formData.name,
+        unit: formData.unit,
+        size: formData.size,
+        color: formData.color,
+        piece: formData.piece,
+        price: Number.parseFloat(formData.price),
+        weight: formData.weight,
+        image: formData.image || "/placeholder.svg?height=150&width=150",
+      };
+      const res = await updateStone(stone._id, newStone);
+
+      setStoneState(res);
+    } catch (error) {
+      console.error("Error creating stone:", error);
+    } finally {
+      onClose();
     }
   };
 
@@ -71,7 +81,11 @@ const StoneEditModal = ({ stone, onClose, onSave }) => {
               onChange={handleImageChange}
             />
             {formData.image && (
-              <img src={formData.image} alt="stone" className="w-full h-full object-cover rounded" />
+              <img
+                src={formData.image}
+                alt="stone"
+                className="w-full h-full object-cover rounded"
+              />
             )}
           </div>
 
@@ -81,7 +95,9 @@ const StoneEditModal = ({ stone, onClose, onSave }) => {
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 className="bg-gray-100 rounded px-3 py-2 w-full"
               />
             </div>
@@ -89,7 +105,9 @@ const StoneEditModal = ({ stone, onClose, onSave }) => {
               <label className="w-32 text-sm font-medium">Unit</label>
               <select
                 value={formData.unit}
-                onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, unit: e.target.value })
+                }
                 className="bg-gray-100 rounded px-3 py-2 w-full"
               >
                 <option value="RATTI">RATTI</option>
@@ -105,7 +123,9 @@ const StoneEditModal = ({ stone, onClose, onSave }) => {
             <label className="block text-sm">Size</label>
             <input
               value={formData.size}
-              onChange={(e) => setFormData({ ...formData, size: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, size: e.target.value })
+              }
               className="bg-gray-100 rounded px-3 py-2 w-full"
             />
           </div>
@@ -113,7 +133,9 @@ const StoneEditModal = ({ stone, onClose, onSave }) => {
             <label className="block text-sm">Color</label>
             <input
               value={formData.color}
-              onChange={(e) => setFormData({ ...formData, color: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, color: e.target.value })
+              }
               className="bg-gray-100 rounded px-3 py-2 w-full"
             />
           </div>
@@ -122,7 +144,9 @@ const StoneEditModal = ({ stone, onClose, onSave }) => {
             <input
               type="number"
               value={formData.piece}
-              onChange={(e) => setFormData({ ...formData, piece: parseInt(e.target.value) })}
+              onChange={(e) =>
+                setFormData({ ...formData, piece: parseInt(e.target.value) })
+              }
               className="bg-gray-100 rounded px-3 py-2 w-full"
             />
           </div>
@@ -131,7 +155,9 @@ const StoneEditModal = ({ stone, onClose, onSave }) => {
             <input
               type="number"
               value={formData.price}
-              onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+              onChange={(e) =>
+                setFormData({ ...formData, price: parseFloat(e.target.value) })
+              }
               className="bg-gray-100 rounded px-3 py-2 w-full"
             />
           </div>
@@ -139,7 +165,9 @@ const StoneEditModal = ({ stone, onClose, onSave }) => {
             <label className="block text-sm">Weight</label>
             <input
               value={formData.weight}
-              onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, weight: e.target.value })
+              }
               className="bg-gray-100 rounded px-3 py-2 w-full"
             />
           </div>
@@ -147,7 +175,7 @@ const StoneEditModal = ({ stone, onClose, onSave }) => {
 
         <div className="mt-6 text-center">
           <button
-            onClick={handleSave}
+            onClick={handleSubmit}
             className="bg-[#8BAD3F] text-white px-6 py-2 rounded hover:bg-[#7A9A35]"
           >
             Save changes

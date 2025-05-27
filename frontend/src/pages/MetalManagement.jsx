@@ -125,7 +125,10 @@ function MetalManagement() {
             <StoneSection
               stones={stones}
               viewMode={viewMode}
-              onAddClick={() => setShowAddStoneModal(true)}
+              onAddClick={() => {
+                setShowAddStoneModal(true);
+              }}
+              setStoneState={setStones}
             />
           )}
         </main>
